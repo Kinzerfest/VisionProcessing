@@ -39,15 +39,15 @@ public class Pipeline {
 	public void process(Mat source0) {
 		// Step Blur0:
 		Mat blurInput = source0;
-		BlurType blurType = BlurType.get("Box Blur");
-		double blurRadius = 5.538085255066387;
+		BlurType blurType = BlurType.get("Median Filter");
+		double blurRadius = 5.405405405405405;
 		blur(blurInput, blurType, blurRadius, blurOutput);
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = blurOutput;
-		double[] hsvThresholdHue = {25.899280575539567, 152.19964813695967};
-		double[] hsvThresholdSaturation = {107.77877697841728, 255.0};
-		double[] hsvThresholdValue = {60.202853288032834, 255.0};
+		double[] hsvThresholdHue = {39.65827338129496, 90.15358361774746};
+		double[] hsvThresholdSaturation = {127.2706834532374, 255.0};
+		double[] hsvThresholdValue = {69.94154676258994, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step Find_Contours0:
@@ -57,17 +57,17 @@ public class Pipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 0.0;
-		double filterContoursMinPerimeter = 0.0;
-		double filterContoursMinWidth = 3.0;
-		double filterContoursMaxWidth = 10000.0;
-		double filterContoursMinHeight = 0.0;
-		double filterContoursMaxHeight = 600.0;
-		double[] filterContoursSolidity = {71.86668247819325, 100.0};
-		double filterContoursMaxVertices = 1000000.0;
-		double filterContoursMinVertices = 0.0;
-		double filterContoursMinRatio = 0.0;
-		double filterContoursMaxRatio = 7.0;
+		double filterContoursMinArea = 0;
+		double filterContoursMinPerimeter = 50.0;
+		double filterContoursMinWidth = 0;
+		double filterContoursMaxWidth = 1000;
+		double filterContoursMinHeight = 0;
+		double filterContoursMaxHeight = 1000;
+		double[] filterContoursSolidity = {0, 100};
+		double filterContoursMaxVertices = 1000000;
+		double filterContoursMinVertices = 0;
+		double filterContoursMinRatio = 0;
+		double filterContoursMaxRatio = 3.0;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}

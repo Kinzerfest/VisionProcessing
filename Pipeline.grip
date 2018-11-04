@@ -1,17 +1,17 @@
 <grip:Pipeline>
   <sources>
     <grip:Camera>
-      <property name="address" value="http://roborio-1806-frc.local:1181/stream.mjpg"/>
+      <property name="deviceNumber" value="1"/>
     </grip:Camera>
   </sources>
   <steps>
     <grip:Step name="Blur">
       <grip:Input step="0" socket="0"/>
       <grip:Input step="0" socket="1">
-        <value>BOX</value>
+        <value>MEDIAN</value>
       </grip:Input>
       <grip:Input step="0" socket="2">
-        <value>5.538085255066387</value>
+        <value>5.405405405405405</value>
       </grip:Input>
       <grip:Output step="0" socket="0" previewed="false"/>
     </grip:Step>
@@ -19,19 +19,19 @@
       <grip:Input step="1" socket="0"/>
       <grip:Input step="1" socket="1">
         <value>
-          <double>0.0</double>
-          <double>103.15144679002314</double>
+          <double>39.65827338129496</double>
+          <double>90.15358361774746</double>
         </value>
       </grip:Input>
       <grip:Input step="1" socket="2">
         <value>
-          <double>0.0</double>
+          <double>127.2706834532374</double>
           <double>255.0</double>
         </value>
       </grip:Input>
       <grip:Input step="1" socket="3">
         <value>
-          <double>141.00346703432393</double>
+          <double>69.94154676258994</double>
           <double>255.0</double>
         </value>
       </grip:Input>
@@ -47,40 +47,40 @@
     <grip:Step name="Filter Contours">
       <grip:Input step="3" socket="0"/>
       <grip:Input step="3" socket="1">
-        <value>0.0</value>
+        <value>0</value>
       </grip:Input>
       <grip:Input step="3" socket="2">
-        <value>0.0</value>
+        <value>50.0</value>
       </grip:Input>
       <grip:Input step="3" socket="3">
-        <value>0.0</value>
+        <value>0</value>
       </grip:Input>
       <grip:Input step="3" socket="4">
-        <value>10000.0</value>
+        <value>1000</value>
       </grip:Input>
       <grip:Input step="3" socket="5">
-        <value>0.0</value>
+        <value>0</value>
       </grip:Input>
       <grip:Input step="3" socket="6">
-        <value>600.0</value>
+        <value>1000</value>
       </grip:Input>
       <grip:Input step="3" socket="7">
         <value>
-          <double>45.78754578754578</double>
-          <double>100.0</double>
+          <int>0</int>
+          <int>100</int>
         </value>
       </grip:Input>
       <grip:Input step="3" socket="8">
-        <value>1000000.0</value>
+        <value>1000000</value>
       </grip:Input>
       <grip:Input step="3" socket="9">
-        <value>0.0</value>
+        <value>0</value>
       </grip:Input>
       <grip:Input step="3" socket="10">
-        <value>0.0</value>
+        <value>0</value>
       </grip:Input>
       <grip:Input step="3" socket="11">
-        <value>1.0</value>
+        <value>3.0</value>
       </grip:Input>
       <grip:Output step="3" socket="0" previewed="true"/>
     </grip:Step>
@@ -111,16 +111,8 @@
   </steps>
   <connections>
     <grip:Connection>
-      <grip:Output source="0" socket="0" previewed="false"/>
-      <grip:Input step="0" socket="0"/>
-    </grip:Connection>
-    <grip:Connection>
       <grip:Output step="3" socket="0" previewed="true"/>
       <grip:Input step="4" socket="0"/>
-    </grip:Connection>
-    <grip:Connection>
-      <grip:Output step="0" socket="0" previewed="false"/>
-      <grip:Input step="1" socket="0"/>
     </grip:Connection>
     <grip:Connection>
       <grip:Output step="1" socket="0" previewed="true"/>
@@ -130,11 +122,19 @@
       <grip:Output step="2" socket="0" previewed="false"/>
       <grip:Input step="3" socket="0"/>
     </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="0" socket="0" previewed="false"/>
+      <grip:Input step="1" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output source="0" socket="0" previewed="true"/>
+      <grip:Input step="0" socket="0"/>
+    </grip:Connection>
   </connections>
   <settings>
-    <teamNumber>1806</teamNumber>
-    <publishAddress>roborio-1806-frc.local</publishAddress>
-    <deployAddress>roboRIO-1806-FRC.local</deployAddress>
+    <teamNumber>0</teamNumber>
+    <publishAddress>roboRIO-0-FRC.local</publishAddress>
+    <deployAddress>roboRIO-0-FRC.local</deployAddress>
     <deployDir>/home/lvuser</deployDir>
     <deployUser>lvuser</deployUser>
     <deployJavaHome>/usr/local/frc/JRE/</deployJavaHome>
@@ -144,7 +144,7 @@
     <language>Java</language>
     <className>Pipeline</className>
     <implementWpilibPipeline>false</implementWpilibPipeline>
-    <saveDir>C:\Users\SWAT\Desktop</saveDir>
+    <saveDir>C:\Users\kinze\GRIP</saveDir>
     <packageName></packageName>
     <moduleName>grip</moduleName>
   </codeGenerationSettings>

@@ -1,3 +1,6 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -5,6 +8,7 @@ import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import javax.swing.*;
 
 public class Processing {
 
@@ -14,12 +18,12 @@ public class Processing {
 
     //	Constants for known variables
     public static final double OFFSET_TO_FRONT = 0;
-    public static final double CAMERA_WIDTH = 320;
-    public static final double DISTANCE_CONSTANT = 5738;
-    public static final double WIDTH_BETWEEN_TARGET = 8.5;
-    public static final double ANGLE_OFFSET = 4.9107;
+    public static final double CAMERA_WIDTH = 3264;
+    public static final double DISTANCE_CONSTANT = 1;
+    public static final double WIDTH_BETWEEN_TARGET = 5.0;
+    public static final double ANGLE_OFFSET = 0;
     public static boolean shouldRun = true;
-
+    public static boolean print = false;
     //	Process for GRIP
     static Pipeline tracker;
     public static VideoCapture videoCapture;
@@ -30,6 +34,8 @@ public class Processing {
     static double lengthError;
     static double[] centerX;
     static double HEIGHT_CLOSENESS = .15;
+    static Timer tmrVideoProcess;
+    private static HttpStreamServer httpStreamService;
 
     public static void main(String[] args) {
         NetworkTable.setClientMode();
@@ -64,19 +70,27 @@ public class Processing {
         System.exit(0);
     }
 
-    public static void processImage() {
+    public static void processImage() throws IOException {
         System.out.println("Processing Started");
         matOriginal = new Mat();
+        videoCapture.read(matOriginal);
+        httpStreamService = new HttpStreamServer(matOriginal);
+        httpStreamService.startStreamingServer();
 
 //		only run for the specified time
         while (true) {
             videoCapture.read(matOriginal);
             tracker.process(matOriginal);
             returnCenterX();
-            System.out.println(getAngle());
-            table.putDouble("distanceFromTarget", distanceFromTarget());
-            table.putDouble("angleFromGoal", getAngle());
-            table.putNumber("numberOfContours", tracker.filterContoursOutput().size());
+            httpStreamService.pushImage(matOriginal);
+
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("Angle from Goal: " + getAngle());
+            System.out.println("distanceFromTarget: " + distanceFromTarget());
+            System.out.println("numberOfContours: " + tracker.filterContoursOutput().size());
+            //table.putDouble("distanceFromTarget", distanceFromTarget());
+            //table.putDouble("angleFromGoal", getAngle());
+            //table.putNumber("numberOfContours", tracker.filterContoursOutput().size());
             //table.putNumberArray("centerX", centerX);
             videoCapture.read(matOriginal);
         }
@@ -89,19 +103,20 @@ public class Processing {
         if (!tracker.filterContoursOutput.isEmpty() && tracker.filterContoursOutput.size() >= 2) {
             Rect r = Imgproc.boundingRect(tracker.filterContoursOutput.get(1));
             Rect r1 = Imgproc.boundingRect(tracker.filterContoursOutput.get(0));
-            centerX = new double[]{r1.x + (r1.width / 2), r.x + (r.width / 2)};
+            centerX = new double[]{r1.x + (r1.width / 2.0), r.x + (r.width / 2.0)};
             //System.out.println(centerX.length); //testing
             // this again checks for the 2 shapes on the target
             if (tracker.filterContoursOutput.size() == 2) {
                 // subtracts one another to get length in pixels
                 lengthBetweenContours = Math.abs(centerX[0] - centerX[1]);
-                System.out.println("I see: " + centerX.length);
+                if (print) System.out.println("I see: " + centerX.length);
             } else {
                 Rect[] rectangleArray = new Rect[tracker.filterContoursOutput.size()];
-                System.out.println("I see: " + rectangleArray.length);
+                if (print) System.out.println("I see: " + rectangleArray.length);
                 for (int i = 0; i < tracker.filterContoursOutput.size(); i++) {
                     rectangleArray[i] = Imgproc.boundingRect(tracker.filterContoursOutput().get(i));
-                    System.out.println("Object" + i + " X " + rectangleArray[i].x + " Y " + rectangleArray[i].y + "Width = " + rectangleArray[i].width);
+                    if (print)
+                        System.out.println("Object" + i + " X " + rectangleArray[i].x + " Y " + rectangleArray[i].y + "Width = " + rectangleArray[i].width);
                 }
                 ArrayList<ArrayList<Integer>> Pairs = new ArrayList<ArrayList<Integer>>();
                 for (int i = 0; i < rectangleArray.length; i++) {
@@ -112,7 +127,7 @@ public class Processing {
                             tempPairs.add(i);
                             tempPairs.add(j);
                             Pairs.add(tempPairs);
-                            System.out.println("\t Found Pair" + i + "and " + j);
+                            if (print) System.out.println("\t Found Pair" + i + "and " + j);
                         }
 
                     }
@@ -124,11 +139,11 @@ public class Processing {
                         ArrayList<Integer> tempPairs = Pairs.get(i);
                         r = rectangleArray[tempPairs.get(0)];
                         r1 = rectangleArray[tempPairs.get(1)];
-                        double[] r1Points = {r.x + (r.width / 2), r.y + (r.height / 2)};
-                        double[] r2Points = {r1.x + (r1.width / 2), r1.y + (r1.height / 2)};
+                        double[] r1Points = {r.x + (r.width / 2.0), r.y + (r.height / 2.0)};
+                        double[] r2Points = {r1.x + (r1.width / 2.0), r1.y + (r1.height / 2.0)};
                         double distanceBetweenPoints = Math.sqrt(Math.pow((r2Points[0] - r1Points[0]), 2) + (Math.pow((r2Points[1] - r1Points[1]), 2)));
-                        System.out.println("\t r1 X : " + r.x);
-                        System.out.println("\t r2 X : " + r1.x);
+                        if (print) System.out.println("\t r1 X : " + r.x);
+                        if (print) System.out.println("\t r2 X : " + r1.x);
 
                         if (distanceBetweenPoints < bestDistance) {
                             //System.out.println("\t Best Distance = " + distanceBetweenPoints );
@@ -139,8 +154,8 @@ public class Processing {
                     ArrayList<Integer> tempPairs = Pairs.get(currentBest);
                     r = rectangleArray[tempPairs.get(0)];
                     r1 = rectangleArray[tempPairs.get(1)];
-                    centerX = new double[]{r.x + (r.width / 2), r1.x + (r1.width / 2)};
-                    System.out.println("\t Best Pairs Found: " + tempPairs.get(0) + " " + tempPairs.get(1));
+                    centerX = new double[]{r.x + (r.width / 2.0), r1.x + (r1.width / 2.0)};
+                    if (print) System.out.println("\t Best Pairs Found: " + tempPairs.get(0) + " " + tempPairs.get(1));
                     // subtracts one another to get length in pixels
                     //lengthBetweenContours = Math.abs((centerX[0] + centerX[1]) / 2) - 320;
                     lengthBetweenContours = Math.abs((centerX[0] + centerX[1]) / 2) - CAMERA_WIDTH / 2;
@@ -152,6 +167,7 @@ public class Processing {
 
     public static double distanceFromTarget() {
         // distance costant divided by length between centers of contours
+        System.out.println("Length Between Contours: " + lengthBetweenContours);
         distanceFromTarget = DISTANCE_CONSTANT / lengthBetweenContours;
         return distanceFromTarget - OFFSET_TO_FRONT;
     }
@@ -176,6 +192,25 @@ public class Processing {
             }
         }
         return angleToGoal;
+    }
+
+    public static void streamHTTP(Mat inputMat) {
+        httpStreamService = new HttpStreamServer(inputMat);
+        /*
+        tmrVideoProcess = new Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!videoCapture.read(inputMat)) {
+                    tmrVideoProcess.stop();
+                }
+
+                //procesed image
+                httpStreamService.imag = inputMat;
+            }
+        });
+
+        tmrVideoProcess.start();
+        */
+        httpStreamService.run();
     }
 
 }
