@@ -26,8 +26,8 @@ public class Pipeline {
 	//Outputs
 	private Mat blurOutput = new Mat();
 	private Mat hsvThresholdOutput = new Mat();
-	public ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
-	public ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
+	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
+	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -39,7 +39,7 @@ public class Pipeline {
 	public void process(Mat source0) {
 		// Step Blur0:
 		Mat blurInput = source0;
-		BlurType blurType = BlurType.get("Median Filter");
+		BlurType blurType = BlurType.get("Box Blur");
 		double blurRadius = 5.405405405405405;
 		blur(blurInput, blurType, blurRadius, blurOutput);
 
@@ -57,16 +57,16 @@ public class Pipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 0;
+		double filterContoursMinArea = 0.0;
 		double filterContoursMinPerimeter = 50.0;
-		double filterContoursMinWidth = 0;
-		double filterContoursMaxWidth = 1000;
-		double filterContoursMinHeight = 0;
-		double filterContoursMaxHeight = 1000;
+		double filterContoursMinWidth = 0.0;
+		double filterContoursMaxWidth = 1000.0;
+		double filterContoursMinHeight = 0.0;
+		double filterContoursMaxHeight = 1000.0;
 		double[] filterContoursSolidity = {0, 100};
-		double filterContoursMaxVertices = 1000000;
-		double filterContoursMinVertices = 0;
-		double filterContoursMinRatio = 0;
+		double filterContoursMaxVertices = 1000000.0;
+		double filterContoursMinVertices = 0.0;
+		double filterContoursMinRatio = 0.0;
 		double filterContoursMaxRatio = 3.0;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
