@@ -36,6 +36,8 @@ public class Processing {
                 Imgproc.drawContours(input,tracker.filterContoursOutput(),-1,new Scalar(0, 0, 255),4);
                 double offset = (CAMERA_FOV/videoCapture.get(3)) * ((boundingRect.x + (boundingRect.width / 2.0)) - (videoCapture.get(3) / 2.0));
                 System.out.println("You are " + offset + " degrees from the target.");
+                System.out.println("Area of contour: " + Imgproc.contourArea(tracker.filterContoursOutput().get(0)));
+                System.out.println("Area of bounding box: " + boundingRect.area());
             }
             httpStreamService.pushImage(input);
         }
