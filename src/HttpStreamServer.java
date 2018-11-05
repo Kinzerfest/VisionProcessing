@@ -25,6 +25,7 @@ public class HttpStreamServer implements Runnable {
 
 
     public void startStreamingServer() throws IOException {
+        System.out.print("go to  http://localhost:8080 with browser");
         serverSocket = new ServerSocket(8080);
         socket = serverSocket.accept();
         writeHeader(socket.getOutputStream(), boundary);
