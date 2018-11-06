@@ -1,4 +1,8 @@
 import java.io.IOException;
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
@@ -14,6 +18,13 @@ public class Processing {
     static final int CAMERA_FOV = 100;
 
     public static void main(String[] args) throws IOException {
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        NetworkTable table = inst.getTable("NetworkTable");
+        NetworkTableEntry angle = inst.getEntry("angle");
+        NetworkTableEntry inputImage = inst.getEntry("mat");
+        inst.startClientTeam(4536);
+        inst.startDSClient();
+
         HttpStreamServer httpStreamService;
         VideoCapture videoCapture = new VideoCapture();
         Pipeline tracker = new Pipeline();
@@ -32,9 +43,10 @@ public class Processing {
                 Point contourCenter = new Point(boundingRect.x + (boundingRect.width / 2.0), boundingRect.y + (boundingRect.height / 2.0));
                 Imgproc.drawMarker(input, contourCenter, new Scalar(0, 0, 255));
                 //Imgproc.rectangle(input,boundingRect.br(), boundingRect.tl(), new Scalar(0,0,255), 4);
-                //Imgproc.drawContours(input, tracker.filterContoursOutput(), -1, new Scalar(0, 0, 255), 4);
+                Imgproc.drawContours(input, tracker.filterContoursOutput(), -1, new Scalar(0, 0, 255), 4);
                 double offset = (CAMERA_FOV / videoCapture.get(3)) * ((boundingRect.x + (boundingRect.width / 2.0)) - (videoCapture.get(3) / 2.0));
-                Imgproc.putText(input, Integer.toString((int)offset) + " deg", contourCenter, 0, 0.65, new Scalar(0,0,255), 2);
+                Imgproc.putText(input, Integer.toString((int)offset) + " deg", contourCenter, 0, 0.65, new Scalar(50,50,255), 2);
+                angle.setDouble(offset);
                 //System.out.println("You are " + offset + " degrees from the target.");
                 //System.out.println("Area of contour: " + Imgproc.contourArea(tracker.filterContoursOutput().get(0)));
                 //System.out.println("Area of bounding box: " + boundingRect.area());
