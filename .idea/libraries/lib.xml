@@ -1,20 +1,16 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/opencv-343.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/NetworkTables-3.0.0-20151123.234551-18-desktop-development.jar!/" />
-      <root url="jar://$USER_HOME$/wpilib/java/current/lib/WPILib.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/NetworkTables-3.0.0-20151123.234551-18-desktop-development.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <NATIVE>
       <root url="file://$PROJECT_DIR$/lib" />
     </NATIVE>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/NetworkTables-3.0.0-20151123.234551-18-desktop-development.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/opencv-343.jar!/" />
-      <root url="jar://$USER_HOME$/wpilib/java/current/lib/WPILib-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" type="SOURCES" />
   </library>
 </component>
