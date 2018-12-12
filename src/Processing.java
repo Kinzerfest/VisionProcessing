@@ -15,10 +15,7 @@ public class Processing {
     static double CAMERA_FOV = 100;
     static double angleError;
 
-    public static void main(String[] args){
-        map();
-        UsbCamera camera = new UsbCamera("usb", 0);
-        /*
+    public static void main(String[] args) {
         final Object imgLock = new Object();
         new VisionThread(new UsbCamera("Back Camera", 1), new Pipeline(), pipeline -> {
             if (!pipeline.filterContoursOutput().isEmpty()) {
@@ -34,20 +31,6 @@ public class Processing {
                 }
             }
         }).start();
-        */
-        }
-
-        static void map(){
-            String javaLibPath = System.getProperty("java.library.path");
-            Map<String, String> envVars = System.getenv();
-            System.out.println("env vars path: " + envVars.get("Path"));
-            System.out.println("Java lib path: " + javaLibPath);
-            for (String var : envVars.keySet()) {
-                System.err.println("examining " + var);
-                if (envVars.get(var).equals(javaLibPath)) {
-                    System.out.println(var);
-                }
-            }
-        }
-        }
+    }
+}
 
