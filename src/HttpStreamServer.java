@@ -1,13 +1,16 @@
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Logger;
 
 public class HttpStreamServer implements Runnable {
 
@@ -22,7 +25,6 @@ public class HttpStreamServer implements Runnable {
     public HttpStreamServer(Mat imagFr) {
         this.imag = imagFr;
     }
-
 
     public void startStreamingServer() throws IOException {
         System.out.print("go to  http://localhost:8080 with browser");
@@ -83,6 +85,7 @@ public class HttpStreamServer implements Runnable {
         socket.close();
         serverSocket.close();
     }
+
     public static BufferedImage Mat2bufferedImage(Mat image) throws IOException {
         MatOfByte bytemat = new MatOfByte();
         Imgcodecs.imencode(".jpg", image, bytemat);
@@ -91,5 +94,23 @@ public class HttpStreamServer implements Runnable {
         BufferedImage img = null;
         img = ImageIO.read(in);
         return img;
+    }
+
+    private static HttpStreamServer defaultStream;
+
+    public static void pushToDefault(Mat image){
+        if(defaultStream == null) {
+            defaultStream = new HttpStreamServer(image);
+            try {
+                defaultStream.startStreamingServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            defaultStream.pushImage(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
